@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beranda - Guess the Number</title>
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+    <style>
+        body {
+            margin: 0; background: #0f0f0f; color: white;
+            font-family: sans-serif; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; height: 100vh;
+        }
+        .container {
+            text-align: center; background: #1a1a1a; padding: 30px;
+            border-radius: 15px; border-left: 5px solid #ff007f;
+        }
+        img.profile { border-radius: 50%; width: 80px; border: 2px solid #ff007f; }
+        .btn-main {
+            background: #ff007f; color: white; border: none; padding: 15px 30px;
+            border-radius: 10px; font-weight: bold; cursor: pointer; margin: 10px;
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.5);
+        }
+        .btn-alt { background: #333; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px; }
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); align-items: center; justify-content: center;
+        }
+        .modal-content { background: #222; padding: 20px; border-radius: 10px; text-align: center; border: 1px solid #ff007f; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <img id="user-pic" class="profile" src="" alt="Profile">
+    <h2 id="user-name">Halo!</h2>
+    <p>Siap untuk menebak angka hari ini?</p>
+    
+    <button class="btn-main" onclick="location.href='gameplay.html'">MULAI BERMAIN</button>
+    <br>
+    <button class="btn-alt" onclick="showModal('logoutModal')">Logout</button>
+    <button class="btn-alt" onclick="showModal('deleteModal')">Hapus Akun</button>
+    <button class="btn-alt" onclick="location.href='privacy.html'">Privacy Policy</button>
+    <div style="color: #ff007f; margin-top: 15px;">by Daus XD</div>
+</div>
+
+<!-- Logout Modal -->
+<div id="logoutModal" class="modal">
+    <div class="modal-content">
+        <h3>Konfirmasi Logout</h3>
+        <p>Apakah Anda yakin ingin keluar?</p>
+        <button class="btn-main" onclick="logout()">Ya, Logout</button>
+        <button class="btn-alt" onclick="hideModal('logoutModal')">Batal</button>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <h3 style="color: red;">Hapus Akun?</h3>
+        <p>Tindakan ini permanen. Verifikasi diperlukan.</p>
+        <button class="btn-main" style="background: red;" onclick="verifyAndDelete()">Hapus & Verifikasi</button>
+        <button class="btn-alt" onclick="hideModal('deleteModal')">Batal</button>
+    </div>
+</div>
+
+<script>
+    const user = JSON.parse(localStorage.getItem("user_auth"));
+    if (!user) window.location.href = "index.html";
+
+    document.getElementById("user-name").innerText = "Halo, " + user.name;
+    document.getElementById("user-pic").src = user.picture;
+
+    function showModal(id) { document.getElementById(id).style.display = "flex"; }
+    function hideModal(id) { document.getElementById(id).style.display = "none"; }
+
+    function logout() {
+        localStorage.removeItem("user_auth");
+        window.location.href = "index.html";
+    }
+
+    function verifyAndDelete() {
+        // Simulasi verifikasi ulang Google
+        alert("Sistem akan mengarahkan ke verifikasi Google untuk menghapus data Anda.");
+        localStorage.removeItem("user_auth");
+        window.location.href = "index.html";
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Guess the Number</title>
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f0f0f;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .login-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 20px;
+            border: 2px solid #ff007f;
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.3);
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        h1 { margin-bottom: 10px; text-shadow: 0 0 10px #ff007f; }
+        .watermark { font-size: 12px; color: #ff007f; margin-top: 20px; opacity: 0.7; }
+        .btn-privacy {
+            background: transparent;
+            border: 1px solid #aaa;
+            color: #aaa;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+        .btn-privacy:hover { color: white; border-color: white; }
+        #google-btn { display: flex; justify-content: center; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <h1>Guess the Number</h1>
+    <p>Silakan login untuk bermain</p>
+    
+    <div id="google-btn"></div>
+
+    <button class="btn-privacy" onclick="location.href='privacy.html'">Privacy Policy</button>
+    <div class="watermark">by Daus XD</div>
+</div>
+
+<script>
+    // GANTI CLIENT_ID_ANDA DENGAN ID DARI GOOGLE CLOUD CONSOLE
+    const CLIENT_ID = "783821950242-8bvb1hd5tv0vv6crjiooimlnbdejn9g3.apps.googleusercontent.com";
+
+    function handleCredentialResponse(response) {
+        const responsePayload = parseJwt(response.credential);
+        localStorage.setItem("user_auth", JSON.stringify(responsePayload));
+        window.location.href = "beranda.html";
+    }
+
+    function parseJwt(token) {
+        var base64Url = token.split('.')[1];
+        var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        return JSON.parse(window.atob(base64));
+    }
+
+    window.onload = function () {
+        if (localStorage.getItem("user_auth")) {
+            window.location.href = "beranda.html";
+            return;
+        }
+
+        google.accounts.id.initialize({
+            client_id: CLIENT_ID,
+            callback: handleCredentialResponse
+        });
+        google.accounts.id.renderButton(
+            document.getElementById("google-btn"),
+            { theme: "outline", size: "large", text: "signin_with", shape: "pill" }
+        );
+    }
+</script>
+</body>
+</html>

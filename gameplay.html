@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gameplay - Guess the Number</title>
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+    <style>
+        body { margin: 0; background: #0f0f0f; color: white; font-family: sans-serif; text-align: center; padding: 20px; }
+        .game-box { max-width: 400px; margin: auto; background: #1a1a1a; padding: 20px; border-radius: 15px; border-top: 5px solid #ff007f; }
+        input { width: 80%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none; }
+        .stats { display: flex; justify-content: space-around; margin: 15px 0; font-weight: bold; color: #ff007f; }
+        .btn-guess { background: #ff007f; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; }
+        .btn-back { background: #444; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="game-box">
+    <h2>Game Menebak</h2>
+    <div id="setup-area">
+        <label>Maksimal Angka (1-100):</label><br>
+        <input type="number" id="max-num" value="50" max="100" min="10"><br>
+        <label>Nyawa (1-10):</label><br>
+        <input type="number" id="lives-set" value="5" max="10" min="1"><br>
+        <button class="btn-guess" onclick="startGame()">Mulai</button>
+    </div>
+
+    <div id="play-area" style="display:none;">
+        <div class="stats">
+            <span>Nyawa: <span id="current-lives">0</span></span>
+            <span>Skor: <span id="score">0</span></span>
+        </div>
+        <p id="hint">Masukkan angka!</p>
+        <input type="number" id="user-guess" placeholder="Angka anda...">
+        <button class="btn-guess" onclick="checkGuess()">Tebak!</button>
+    </div>
+    
+    <button class="btn-back" onclick="location.href='beranda.html'">Kembali</button>
+    <div style="color: #ff007f; margin-top: 15px; font-size: 12px;">by Daus XD</div>
+</div>
+
+<script>
+    if (!localStorage.getItem("user_auth")) window.location.href = "index.html";
+
+    let targetNum, lives, maxVal, score;
+
+    function startGame() {
+        maxVal = parseInt(document.getElementById("max-num").value);
+        lives = parseInt(document.getElementById("lives-set").value);
+        if (maxVal > 100) maxVal = 100;
+        if (lives > 10) lives = 10;
+        
+        targetNum = Math.floor(Math.random() * maxVal) + 1;
+        score = maxVal; // Semakin besar maks angka, semakin besar skor awal
+        
+        document.getElementById("current-lives").innerText = lives;
+        document.getElementById("score").innerText = score;
+        document.getElementById("setup-area").style.display = "none";
+        document.getElementById("play-area").style.display = "block";
+    }
+
+    function checkGuess() {
+        let guess = parseInt(document.getElementById("user-guess").value);
+        let hint = document.getElementById("hint");
+
+        if (guess === targetNum) {
+            alert("HEBAT! Anda Benar. Skor: " + score);
+            location.reload();
+        } else {
+            lives--;
+            score -= 5;
+            document.getElementById("current-lives").innerText = lives;
+            document.getElementById("score").innerText = score;
+            hint.innerText = guess > targetNum ? "Terlalu Tinggi!" : "Terlalu Rendah!";
+            
+            if (lives <= 0) {
+                alert("GAME OVER! Angkanya adalah " + targetNum);
+                location.reload();
+            }
+        }
+    }
+</script>
+</body>
+</html>
